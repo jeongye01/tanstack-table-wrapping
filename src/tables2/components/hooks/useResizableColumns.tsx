@@ -6,36 +6,46 @@ interface UseResizableColumnsOptions<TColumn> {
 }
 
 export function useResizableColumns<TColumn>({ initColumns }: UseResizableColumnsOptions<TColumn>) {
-   const [columnSizing, setColumnSizing] = useState<Record<string, number>>();
-
    const containerRef = useRef<HTMLDivElement>(null);
    const [containerWidth, setContainerWidth] = useState<number>();
+   const [columns, setColumns] = useState(initColumns);
+   const [columnSizeMap, setColumnSizeMap] = useState<Record<string, number>>({});
 
    useEffect(() => {
       const container = containerRef.current;
+
       if (!container) return;
+
       const observer = new ResizeObserver(entries => {
          for (const entry of entries) {
             if (entry.contentRect) {
                const totalWidth = entry.contentRect.width;
                const dynamicColumns = initColumns.filter(col => !col.size).length;
-               const staticWidth = initColumns.reduce((acc, col) => acc + (col.size || 0), 0);
+               const staticWidth = columns.reduce((acc, col) => acc + (col.size || 0), 0);
                const defaultColumnWidth =
                   dynamicColumns > 0 ? Math.trunc((totalWidth - staticWidth) / dynamicColumns) : 0;
                const lastColumnWidth = totalWidth - staticWidth - defaultColumnWidth * (dynamicColumns - 1);
                let left = dynamicColumns; // FIXME: 안티패턴
 
-               const newColumnSizing = initColumns.reduce((acc, col) => {
+               const newColumns = initColumns.map(col => {
                   if (col.size) {
-                     acc[col.accessorKey!] = col.size;
-                  } else {
-                     left--;
-                     acc[col.accessorKey!] = left === 1 ? lastColumnWidth : defaultColumnWidth;
+                     return col;
+                  }
+                  left--;
+                  return {
+                     ...col,
+                     size: left === 1 ? lastColumnWidth : defaultColumnWidth,
+                  };
+               });
+               setColumns(newColumns);
+               const sizeMap = newColumns.reduce((acc, column) => {
+                  const key = column.accessorKey; // id 또는 accessorKey 사용
+                  if (key && column.size !== undefined) {
+                     acc[key] = column.size;
                   }
                   return acc;
                }, {} as Record<string, number>);
-               console.log(newColumnSizing);
-               setColumnSizing(newColumnSizing);
+               setColumnSizeMap(sizeMap); // 상태 업데이트
                setContainerWidth(totalWidth);
             }
          }
@@ -45,13 +55,6 @@ export function useResizableColumns<TColumn>({ initColumns }: UseResizableColumn
          observer.disconnect();
       };
    }, []);
-   const handleColumnResize = (columnId: string, deltaX: number) => {
-      setColumnSizing(prevSizing => {
-         const newSizing = { ...prevSizing };
-         const newWidth = Math.max((newSizing[columnId] || 0) + deltaX, 50); // 최소 너비 50px
-         newSizing[columnId] = newWidth;
-         return newSizing;
-      });
-   };
-   return { containerRef, containerWidth, columnSizing, handleColumnResize };
+
+   return { containerRef, containerWidth, columns, columnSizeMap, setColumnSizeMap };
 }

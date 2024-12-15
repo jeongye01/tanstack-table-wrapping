@@ -1,7 +1,7 @@
 @import 'reset.css';
 
 .dbmaster-table-container {
-   overflow: auto;
+   overflow: scroll;
    position: relative;
 }
 
@@ -26,7 +26,6 @@
    font-size: var(--dbmaster-font-size, 12px);
    table-layout: fixed;
    width: fit-content;
-   overflow-y: auto;
 }
 
 .dbmaster-thead {

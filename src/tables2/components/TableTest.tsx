@@ -79,6 +79,7 @@ const columns: ColumnDef<Person>[] = [
             original: { lastName },
          },
       }) => <button>{lastName}</button>,
+      enableResizing: false,
    },
    {
       accessorKey: 'age',
