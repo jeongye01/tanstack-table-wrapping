@@ -95,7 +95,7 @@ const columns: ColumnDef<Person>[] = [
    {
       accessorKey: 'progress',
       header: 'Progress',
-      size: 300,
+      size: 500,
    },
    // columnHelper.accessor(row => row.lastName, {
    //   id: 'lastName',
@@ -116,7 +116,7 @@ const columns: ColumnDef<Person>[] = [
    // }),
 ];
 export const TableTest = () => {
-   console.log(columns);
+   console.log(columns, 2222);
    return (
       <div style={{ padding: '60px' }}>
          <Table data={randomData} columns={columns} option={{ size: { height: '500px' } }} />

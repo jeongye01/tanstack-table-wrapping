@@ -108,6 +108,10 @@
    opacity: 1;
 }
 
+.dbmaster-column-resizer-bar:hover {
+   opacity: 1;
+}
+
 @media (hover: hover) {
    .dbmaster-column-resizer-bar {
       opacity: 0;

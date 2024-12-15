@@ -7,9 +7,10 @@ import {
    useReactTable,
 } from '@tanstack/react-table';
 
-import { type CSSProperties, useEffect, useRef, useState } from 'react';
+import { type CSSProperties, useState } from 'react';
 
 import { SortingButton } from './Header/SortingButton';
+import { useResizableColumns } from './hooks/useResizableColumns';
 
 interface TableProps<TData> extends Pick<TableOptions<TData>, 'data' | 'columns'> {
    option?: {
@@ -24,53 +25,15 @@ interface TableProps<TData> extends Pick<TableOptions<TData>, 'data' | 'columns'
    };
 }
 
-export const Table = <TData,>({ data, columns: rawColumns, option }: TableProps<TData>) => {
+export const Table = <TData,>({ data, columns: initColumns, option }: TableProps<TData>) => {
    const { size } = option || {};
    const [sorting, setSorting] = useState<SortingState>([]);
-   const [columns, setColumns] = useState(rawColumns);
 
-   const containerRef = useRef<HTMLDivElement>(null);
-   const [width, setWidth] = useState<number>();
-
-   useEffect(() => {
-      const container = containerRef.current;
-      if (!container) return;
-      const observer = new ResizeObserver(entries => {
-         for (const entry of entries) {
-            if (entry.contentRect) {
-               const totalWidth = entry.contentRect.width;
-
-               const dynamicColumns = rawColumns.filter(col => !col.size).length;
-               const staticWidth = columns.reduce((acc, col) => acc + (col.size || 0), 0);
-               const defaultColumnWidth =
-                  dynamicColumns > 0 ? Math.trunc((totalWidth - staticWidth) / dynamicColumns) : 0;
-               const lastColumnWidth = totalWidth - staticWidth - defaultColumnWidth * (dynamicColumns - 1);
-               let left = dynamicColumns;
-               setColumns(
-                  rawColumns.map(col => {
-                     if (col.size) {
-                        return col;
-                     }
-                     left--;
-                     return {
-                        ...col,
-                        size: left === 1 ? lastColumnWidth : defaultColumnWidth,
-                     };
-                  }),
-               );
-               setWidth(totalWidth);
-            }
-         }
-      });
-      observer.observe(container);
-      return () => {
-         observer.disconnect();
-      };
-   }, []);
+   const { containerRef, columnSizing } = useResizableColumns({ initColumns });
 
    const table = useReactTable({
       data,
-      columns,
+      columns: initColumns,
       columnResizeMode: 'onChange',
       columnResizeDirection: 'ltr',
       getCoreRowModel: getCoreRowModel(),
@@ -78,9 +41,10 @@ export const Table = <TData,>({ data, columns: rawColumns, option }: TableProps<
       onSortingChange: setSorting,
       state: {
          sorting,
+         columnSizing,
       },
    });
-
+   console.log(columnSizing);
    return (
       <div
          ref={containerRef}
@@ -94,7 +58,7 @@ export const Table = <TData,>({ data, columns: rawColumns, option }: TableProps<
             minWidth: size?.minWidth,
          }}
       >
-         <table className="dbmaster-table" style={{ opacity: width ? 1 : 0 }}>
+         <table className="dbmaster-table" style={{ opacity: columnSizing ? 1 : 0 }}>
             <thead className="dbmaster-thead">
                {table.getHeaderGroups().map(headerGroup => (
                   <tr key={headerGroup.id} className="dbmaster-tr">
@@ -102,7 +66,7 @@ export const Table = <TData,>({ data, columns: rawColumns, option }: TableProps<
                         <th
                            key={header.id}
                            style={{
-                              width: header.getSize(),
+                              width: columnSizing?.[header.id],
                            }}
                            data-column-id={header.id}
                            className="dbmaster-th"
@@ -118,11 +82,17 @@ export const Table = <TData,>({ data, columns: rawColumns, option }: TableProps<
                               <div
                                  {...{
                                     onDoubleClick: () => header.column.resetSize(),
-                                    onMouseDown: header.getResizeHandler(),
+                                    onMouseDown: () => {
+                                       console.log(
+                                          table.getState().columnSizing,
+                                          table.getState().columnSizingInfo.deltaOffset,
+                                       );
+                                    },
+
                                     onTouchStart: header.getResizeHandler(),
                                     className: `
-                                       dbmaster-column-resizer-bar
-                                       ${header.column.getIsResizing() ? 'isResizing' : ''}`,
+                                    dbmaster-column-resizer-bar
+                                    ${header.column.getIsResizing() ? 'isResizing' : ''}`,
                                  }}
                               />
                            )}
@@ -138,7 +108,7 @@ export const Table = <TData,>({ data, columns: rawColumns, option }: TableProps<
                         <td
                            key={cell.id}
                            data-column-id={cell.id}
-                           style={{ width: cell.column.getSize() }}
+                           style={{ width: columnSizing?.[cell.column.id] }}
                            className="dbmaster-td"
                         >
                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
