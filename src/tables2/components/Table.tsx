@@ -129,19 +129,22 @@ export const Table = <TData,>({
   return (
     <div
       ref={containerRef}
-      className="dbmaster-table-container dbmaster-table-scrollbar"
-      style={{
-        height: size?.height ?? "100%",
-        minHeight: size?.minHeight,
-        maxHeight: size?.maxHeight,
-        width: size?.width ?? "100%",
-        maxWidth: size?.maxWidth,
-        minWidth: size?.minWidth,
-      }}
+      // className="dbmaster-table-container dbmaster-table-scrollbar"
+      // style={{
+      //   height: size?.height ?? "100%",
+      //   minHeight: size?.minHeight,
+      //   maxHeight: size?.maxHeight,
+      //   width: size?.width ?? "100%",
+      //   maxWidth: size?.maxWidth,
+      //   minWidth: size?.minWidth,
+      // }}
     >
       <table
         className="dbmaster-table"
-        style={{ opacity: containerWidth ? 1 : 0 }}
+        style={{
+          "--dbmaster-table-width": size?.width ?? "100%",
+          "--dbmaster-table-height": size?.height ?? "100%",
+        }}
       >
         <thead className="dbmaster-thead">
           {table.getHeaderGroups().map((headerGroup) => (
