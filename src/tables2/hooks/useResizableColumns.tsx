@@ -11,9 +11,7 @@ export function useResizableColumns<TColumn>({
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState<number>();
   const [columns, setColumns] = useState(initColumns);
-  const [columnSizeMap, setColumnSizeMap] = useState<Record<string, number>>(
-    {}
-  );
+  const [columnSizeMap, setColumnSizeMap] = useState<Record<string, number>>();
 
   useEffect(() => {
     const container = containerRef.current;

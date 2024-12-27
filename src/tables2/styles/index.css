@@ -3,6 +3,8 @@
 .dbmaster-table-container {
   overflow: scroll;
   position: relative;
+  width: var(--dbmaster-table-width, "100%");
+  height: var(--dbmaster-table-height, "100%");
 }
 
 .dbmaster-table-scrollbar::-webkit-scrollbar {
@@ -24,7 +26,7 @@
   border-collapse: separate;
   border-spacing: 0;
   font-size: var(--dbmaster-font-size, 12px);
-  width: var(--dbmaster-table-width, "100%");
+
   table-layout: fixed;
 }
 

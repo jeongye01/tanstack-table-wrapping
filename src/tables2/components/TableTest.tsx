@@ -136,7 +136,7 @@ export const TableTest = () => {
       <Table
         data={randomData}
         columns={columns}
-        option={{ size: { height: 500 } }}
+        option={{ size: { height: "500px" } }}
       />
     </div>
   );
