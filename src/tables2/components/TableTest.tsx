@@ -37,7 +37,7 @@ function generateRandomData(count = 500) {
 }
 
 // Example usage
-const randomData = generateRandomData(50);
+const randomData = generateRandomData(150000);
 
 type Person = {
    firstName: string;
@@ -71,12 +71,14 @@ const columns: ColumnDef<Person>[] = [
       header: 'No',
 
       enableResizing: true,
+      minSize: 80,
    },
    {
       accessorKey: 'firstName',
       header: 'First Name',
 
       enableResizing: true,
+      minSize: 120,
    },
    {
       accessorKey: 'lastName',
@@ -87,23 +89,28 @@ const columns: ColumnDef<Person>[] = [
          },
       }) => <button>{lastName}</button>,
       enableResizing: false,
+      minSize: 80,
    },
    {
       accessorKey: 'age',
       header: 'Age',
+      minSize: 80,
    },
    {
       accessorKey: 'visits',
       header: 'Visits',
+      minSize: 80,
    },
    {
       accessorKey: 'status',
       header: 'Status',
+      minSize: 80,
    },
    {
       accessorKey: 'progress',
       header: 'Progress',
       size: 500,
+      minSize: 80,
    },
    // columnHelper.accessor(row => row.lastName, {
    //   id: 'lastName',

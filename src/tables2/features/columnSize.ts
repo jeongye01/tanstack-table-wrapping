@@ -18,7 +18,7 @@ export const generateColumnSizeMap = <TData, TValue>(
       const isLastDynamicColumn = index === columns.length - 1 || columns.slice(index + 1).every(c => c.size);
       const size = col.size || (isLastDynamicColumn ? lastColumnWidth : defaultColumnWidth);
       if (col.accessorKey) {
-         acc[col.accessorKey] = size;
+         acc[col.accessorKey] = Math.max(size, col.minSize || -1); // TODO: maxSize 처리
       }
       return acc;
    }, {} as Record<string, number>);

@@ -20,7 +20,6 @@ export const useColumnSize = <TData, TValue>({
          if (!contextDocument || !columnSizeMap || !tableWidth) return;
          const startX = event.clientX;
          const startSize = columnSizeMap[columnId];
-
          const handleMouseMove = (moveEvent: MouseEvent) => {
             const deltaX = moveEvent.clientX - startX;
             const newSize = startSize + deltaX;
