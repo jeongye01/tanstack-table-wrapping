@@ -2,7 +2,7 @@ import { type ColumnDef } from '@tanstack/react-table';
 
 import { Table } from './Table';
 
-function generateRandomData(count = 500) {
+function generateRandomData(count = 1500) {
    const firstNames = ['John', 'Jane', 'Alice', 'Bob', 'Charlie', 'Eve', 'Grace', 'Tom', 'Emily', 'David'];
    const lastNames = [
       'Smith',
@@ -21,8 +21,9 @@ function generateRandomData(count = 500) {
    const getRandomElement = (array: string[]) => array[Math.floor(Math.random() * array.length)];
    const getRandomNumber = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
 
-   const data = Array.from({ length: count }, () => {
+   const data = Array.from({ length: count }, (item, index) => {
       return {
+         no: index + 1,
          firstName: getRandomElement(firstNames),
          lastName: getRandomElement(lastNames),
          age: getRandomNumber(18, 80),
@@ -36,7 +37,7 @@ function generateRandomData(count = 500) {
 }
 
 // Example usage
-const randomData = generateRandomData(500);
+const randomData = generateRandomData(1500);
 
 type Person = {
    firstName: string;
@@ -65,6 +66,10 @@ const columns: ColumnDef<Person>[] = [
       maxSize: 26,
       enableResizing: false,
       enableSorting: false,
+   },
+   {
+      accessorKey: 'no',
+      header: 'No',
    },
    {
       accessorKey: 'firstName',
@@ -114,9 +119,9 @@ const columns: ColumnDef<Person>[] = [
    // }),
 ];
 export const TableTest = () => {
-   console.log(columns);
+   console.log(randomData.length);
    return (
-      <div style={{ padding: '60px' }}>
+      <div style={{ padding: '160px' }}>
          <Table data={randomData} columns={columns} option={{ size: { height: '500px' } }} />
       </div>
    );

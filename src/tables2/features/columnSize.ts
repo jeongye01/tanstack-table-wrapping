@@ -51,3 +51,15 @@ export const adjustColumnWidth = ({
       [columnId]: adjustedSize,
    };
 };
+export const generateColumnStartMap = (sizeMap: Record<string, number>): Record<string, number> => {
+   if (!sizeMap || Object.keys(sizeMap).length === 0) return {};
+
+   return Object.keys(sizeMap).reduce(
+      (acc: { startMap: Record<string, number>; cumulativeWidth: number }, columnId: string) => {
+         acc.startMap[columnId] = acc.cumulativeWidth;
+         acc.cumulativeWidth += sizeMap[columnId];
+         return acc;
+      },
+      { startMap: {}, cumulativeWidth: 0 },
+   ).startMap;
+};

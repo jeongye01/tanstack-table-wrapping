@@ -1,9 +1,9 @@
 import { flexRender, type TableOptions } from '@tanstack/react-table';
 
-import { type CSSProperties } from 'react';
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
 
 import { SortingButton } from './Header/SortingButton';
-import { useResizableContainer } from '../hooks/useContainerWidth';
+import { useContainerWidth } from '../hooks/useContainerWidth';
 import { useTable } from '../hooks/useTable';
 
 interface TableProps<TData> extends Pick<TableOptions<TData>, 'data' | 'columns'> {
@@ -19,16 +19,16 @@ interface TableProps<TData> extends Pick<TableOptions<TData>, 'data' | 'columns'
    };
 }
 
-export const Table = <TData,>({ data, columns: initColumns, option }: TableProps<TData>) => {
+export const Table = <TData,>({ data, columns, option }: TableProps<TData>) => {
    const { size } = option || {};
-   const { containerRef, size: tableSize } = useResizableContainer();
-   const { table, columnSizeMap, onColumnResize } = useTable({
+   const containerRef = useRef<HTMLDivElement>(null);
+   const { size: tableSize } = useContainerWidth({ containerRef });
+   const { table, columnSizeMap, onColumnResize, columnStartMap } = useTable<TData>({
       data,
-      columns: initColumns,
+      columns,
       option: { size: tableSize },
    });
-   console.log(columnSizeMap);
-
+   console.log(columnStartMap);
    return (
       <div
          ref={containerRef}
@@ -52,6 +52,7 @@ export const Table = <TData,>({ data, columns: initColumns, option }: TableProps
                               key={header.id}
                               style={{
                                  width: columnSizeMap?.[header.id],
+                                 left: columnStartMap?.[header.id],
                               }}
                               data-column-id={header.id}
                               className="dbmaster-th"
@@ -84,10 +85,13 @@ export const Table = <TData,>({ data, columns: initColumns, option }: TableProps
                      <tr key={row.id} className="dbmaster-tr">
                         {row.getVisibleCells().map(cell => (
                            <td
+                              className="dbmaster-td"
                               key={cell.id}
                               data-column-id={cell.id}
-                              style={{ width: columnSizeMap?.[cell.id] }}
-                              className="dbmaster-td"
+                              style={{
+                                 width: columnSizeMap?.[cell.id],
+                                 left: columnStartMap?.[cell.column.id],
+                              }}
                            >
                               {flexRender(cell.column.columnDef.cell, cell.getContext())}
                            </td>
