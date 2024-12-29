@@ -18,7 +18,7 @@ export const generateColumnSizeMap = <TData, TValue>(
       const isLastDynamicColumn = index === columns.length - 1 || columns.slice(index + 1).every(c => c.size);
       const size = col.size || (isLastDynamicColumn ? lastColumnWidth : defaultColumnWidth);
       if (col.accessorKey) {
-         acc[col.accessorKey] = size;
+         acc[col.accessorKey] = Math.max(size, col.minSize || -1); // TODO: maxSize 처리
       }
       return acc;
    }, {} as Record<string, number>);
@@ -50,4 +50,16 @@ export const adjustColumnWidth = ({
       ...columnSizeMap,
       [columnId]: adjustedSize,
    };
+};
+export const generateColumnStartMap = (sizeMap: Record<string, number>): Record<string, number> => {
+   if (!sizeMap || Object.keys(sizeMap).length === 0) return {};
+
+   return Object.keys(sizeMap).reduce(
+      (acc: { startMap: Record<string, number>; cumulativeWidth: number }, columnId: string) => {
+         acc.startMap[columnId] = acc.cumulativeWidth;
+         acc.cumulativeWidth += sizeMap[columnId];
+         return acc;
+      },
+      { startMap: {}, cumulativeWidth: 0 },
+   ).startMap;
 };

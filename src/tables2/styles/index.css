@@ -1,124 +1,127 @@
-@import "reset.css";
+@import 'reset.css';
 
 .dbmaster-table-container {
-  overflow: scroll;
-  position: relative;
-  width: var(--dbmaster-table-width, "100%");
-  height: var(--dbmaster-table-height, "100%");
+   overflow: scroll;
+   position: relative;
+   width: var(--dbmaster-table-width, '100%');
+   height: var(--dbmaster-table-height, '100%');
 }
 
 .dbmaster-table-scrollbar::-webkit-scrollbar {
-  width: 16px;
+   width: 16px;
 }
 
 .dbmaster-table-scrollbar::-webkit-scrollbar-thumb {
-  height: 30%;
-  border-radius: 10px;
-  border: 4.5px solid transparent;
-  box-shadow: inset 10px 10px 0 #001d3a2e;
+   height: 30%;
+   border-radius: 10px;
+   border: 4.5px solid transparent;
+   box-shadow: inset 10px 10px 0 #001d3a2e;
 }
 
 .dbmaster-table-scrollbar::-webkit-scrollbar-corner {
-  background: transparent;
+   background: transparent;
 }
 
 .dbmaster-table {
-  border-collapse: separate;
-  border-spacing: 0;
-  font-size: var(--dbmaster-font-size, 12px);
-
-  table-layout: fixed;
+   border-collapse: separate;
+   border-spacing: 0;
+   font-size: var(--dbmaster-font-size, 12px);
 }
 
 .dbmaster-thead {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  background-color: #ffffff;
-  overflow: hidden;
-  height: var(--dbmaster-header-height, 48px);
+   position: sticky;
+   top: 0;
+   z-index: 1;
+   background-color: #ffffff;
+   overflow: hidden;
+   height: var(--dbmaster-header-height, 48px);
 }
 
 .dbmaster-tr {
-  height: 46px;
-  align-items: center;
-  width: 100%;
+   height: 46px;
+   display: flex;
+   align-items: center;
+   position: relative;
 }
 .dbmaster-tr:nth-child(even) {
-  background: #f9f9f9;
+   background: #f9f9f9;
 }
 
 .dbmaster-tr:nth-child(odd) {
-  background: #ffffff;
+   background: #ffffff;
 }
 
-.dbmaster-th {
-  font-weight: 700;
-  color: var(--Adaptive-Grey-Grey900, #202124);
-  border-bottom: 1px solid var(--Adaptive-Grey-Grey200, #e8eaed);
-  position: relative;
-}
 .dbmaster-td {
-  font-weight: 500;
-  color: var(--Adaptive-Grey-Grey800, #3c4043);
+   font-weight: 500;
+   color: var(--Adaptive-Grey-Grey800, #3c4043);
 }
 .dbmaster-th,
 .dbmaster-td {
-  text-align: left;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  padding-inline: 10px;
-  box-sizing: border-box;
-}
+   position: absolute;
+   text-align: left;
+   overflow: hidden;
+   white-space: nowrap;
+   text-overflow: ellipsis;
+   padding-inline: 10px;
+   box-sizing: border-box;
 
+   background-color: inherit;
+}
+.dbmaster-th {
+   font-weight: 700;
+   color: var(--Adaptive-Grey-Grey900, #202124);
+   border-bottom: 1px solid var(--Adaptive-Grey-Grey200, #e8eaed);
+   display: flex;
+   height: 100%;
+   align-items: center;
+}
 .dbmaster-sorting-icon {
-  position: absolute;
-  top: 50%;
-  right: 0;
-  background: transparent;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  gap: 0px;
-  right: 0px;
-  width: 18px;
-  height: 18px;
-  background: transparent;
-  outline: none;
-  border: none;
+   position: absolute;
+   top: 50%;
+   right: 0;
+   background: transparent;
+   transform: translateY(-50%);
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   cursor: pointer;
+   gap: 0px;
+   right: 0px;
+   width: 18px;
+   height: 18px;
+   background: transparent;
+   outline: none;
+   border: none;
 }
 
 .dbmaster-column-resizer-bar {
-  position: absolute;
-  right: 0;
-  top: 0;
-  height: 100%;
-  width: 5px;
-  background: rgba(0, 0, 0, 0.5);
-  user-select: none;
-  touch-action: none;
-  cursor: col-resize;
-  opacity: 0;
+   position: absolute;
+   right: 0;
+   top: 0;
+   height: 100%;
+   width: 5px;
+   background: rgba(0, 0, 0, 0.5);
+   user-select: none;
+   touch-action: none;
+   cursor: col-resize;
+   opacity: 0;
 }
 
 .dbmaster-column-resizer-bar.isResizing {
-  opacity: 1;
+   opacity: 1;
 }
 
 .dbmaster-column-resizer-bar:hover {
-  opacity: 1;
+   opacity: 1;
 }
 
 @media (hover: hover) {
-  .dbmaster-column-resizer-bar {
-    opacity: 0;
-  }
+   .dbmaster-column-resizer-bar {
+      opacity: 0;
+   }
 
-  *:hover > .dbmaster-column-resizer-bar {
-    opacity: 1;
-  }
+   *:hover > .dbmaster-column-resizer-bar {
+      opacity: 1;
+   }
 }
