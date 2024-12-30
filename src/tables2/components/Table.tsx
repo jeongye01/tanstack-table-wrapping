@@ -27,7 +27,7 @@ export const Table = <TData,>({ data, columns, option }: TableProps<TData>) => {
 
    // 테이블 크기 계산 및 초기화
    const { size: containerSize } = useContainerWidth({ containerRef });
-   const { table, columnSizeMap, onColumnResize } = useTable<TData>({
+   const { table, columnSizeMap, onColumnResize, tableTotalSize } = useTable<TData>({
       data,
       columns,
       option: { size: containerSize },
@@ -63,6 +63,7 @@ export const Table = <TData,>({ data, columns, option }: TableProps<TData>) => {
                className="dbmaster-table"
                style={{
                   height: `${virtualizer.getTotalSize()}px`,
+                  width: tableTotalSize,
                }}
             >
                <thead className="dbmaster-thead">
@@ -110,7 +111,6 @@ export const Table = <TData,>({ data, columns, option }: TableProps<TData>) => {
                            key={row.id}
                            className="dbmaster-tr"
                            style={{
-                              height: `${virtualRow.size}px`,
                               transform: `translateY(${virtualRow.start - index * virtualRow.size}px)`,
                            }}
                         >

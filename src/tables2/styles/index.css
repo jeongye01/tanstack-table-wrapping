@@ -21,8 +21,7 @@
 }
 
 .dbmaster-table {
-   border-collapse: separate;
-   border-spacing: 0;
+   border-collapse: collapse;
    font-size: var(--dbmaster-font-size);
 }
 
@@ -62,15 +61,13 @@
    text-overflow: ellipsis;
    padding-inline: 10px;
    box-sizing: border-box;
-
-   background-color: inherit;
 }
 .dbmaster-th {
    font-weight: 700;
    color: var(--Adaptive-Grey-Grey900, #202124);
    border-bottom: 1px solid var(--Adaptive-Grey-Grey200, #e8eaed);
-   display: flex;
    height: 100%;
+   display: flex;
    align-items: center;
 }
 .dbmaster-sorting-icon {
@@ -88,7 +85,6 @@
    right: 0px;
    width: 18px;
    height: 18px;
-   background: transparent;
    outline: none;
    border: none;
 }

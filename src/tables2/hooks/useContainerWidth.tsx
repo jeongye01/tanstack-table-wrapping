@@ -5,7 +5,6 @@ export interface SizeOption {
 }
 export function useContainerWidth({ containerRef }: { containerRef: RefObject<HTMLDivElement> }) {
    const [size, setSize] = useState<SizeOption>();
-
    useEffect(() => {
       const containerElement = containerRef.current;
       if (!containerElement) return;

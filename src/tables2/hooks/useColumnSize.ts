@@ -21,11 +21,7 @@ export const useColumnSize = <TData, TValue>({
          const handleMouseMove = (moveEvent: MouseEvent) => {
             const deltaX = moveEvent.clientX - startX;
             const newSize = startSize + deltaX;
-            const newSizeMap = processColumnResize({ columnSizeMap, accessorKey, newSize, tableWidth });
-            console.log(newSizeMap);
-            if (newSizeMap) {
-               setColumnSizeMap(newSizeMap);
-            }
+            setColumnSizeMap(processColumnResize({ columnSizeMap, accessorKey, newSize, tableWidth }));
          };
          const handleMouseUp = () => {
             contextDocument.removeEventListener('mousemove', handleMouseMove);
