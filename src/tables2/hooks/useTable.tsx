@@ -22,6 +22,8 @@ export function useTable<TData>({ data, columns, option }: UseTableOptions<TData
       tableWidth: option?.size?.width,
    });
 
+   const tableTotalSize = Array.from(columnSizeMap?.values() ?? []).reduce((acc, column) => acc + column.size, 0);
+
    const table = useReactTable({
       data,
       columns,
@@ -35,5 +37,5 @@ export function useTable<TData>({ data, columns, option }: UseTableOptions<TData
       },
    });
 
-   return { table, columnSizeMap, onColumnResize };
+   return { table, columnSizeMap, onColumnResize, tableTotalSize };
 }
