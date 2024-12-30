@@ -24,7 +24,7 @@ export const Table = <TData,>({ data, columns, option }: TableProps<TData>) => {
 
    // 테이블 크기 계산 및 초기화
    const { size: containerSize } = useContainerWidth({ containerRef });
-   const { table, columnSizeMap, onColumnResize, columnStartMap } = useTable<TData>({
+   const { table, columnSizeMap, onColumnResize } = useTable<TData>({
       data,
       columns,
       option: { size: containerSize },
@@ -37,7 +37,7 @@ export const Table = <TData,>({ data, columns, option }: TableProps<TData>) => {
       estimateSize: () => 46,
       overscan: 2,
    });
-
+   console.log(columnSizeMap);
    return (
       <div
          ref={containerRef}
@@ -63,8 +63,8 @@ export const Table = <TData,>({ data, columns, option }: TableProps<TData>) => {
                               <th
                                  key={header.id}
                                  style={{
-                                    width: columnSizeMap?.[header.id],
-                                    left: columnStartMap?.[header.id],
+                                    width: columnSizeMap.get(header.id)?.size,
+                                    left: columnSizeMap.get(header.id)?.startLeft,
                                  }}
                                  data-column-id={header.id}
                                  className="dbmaster-th"
@@ -111,8 +111,8 @@ export const Table = <TData,>({ data, columns, option }: TableProps<TData>) => {
                                     key={cell.id}
                                     data-column-id={cell.id}
                                     style={{
-                                       width: columnSizeMap?.[cell.column.id],
-                                       left: columnStartMap?.[cell.column.id],
+                                       width: columnSizeMap.get(cell.column.id)?.size,
+                                       left: columnSizeMap.get(cell.column.id)?.startLeft,
                                     }}
                                  >
                                     {flexRender(cell.column.columnDef.cell, cell.getContext())}

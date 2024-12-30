@@ -49,6 +49,7 @@ type Person = {
 };
 
 const columns: ColumnDef<Person>[] = [
+   // TODO: minSize, maxSize 속성 지우기
    {
       accessorKey: 'checkbox',
       header: () => (
@@ -99,12 +100,13 @@ const columns: ColumnDef<Person>[] = [
    {
       accessorKey: 'visits',
       header: 'Visits',
-      minSize: 80,
+      minSize: 40,
    },
    {
       accessorKey: 'status',
       header: 'Status',
       minSize: 80,
+      maxSize: 100,
    },
    {
       accessorKey: 'progress',

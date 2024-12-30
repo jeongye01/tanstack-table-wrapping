@@ -1,8 +1,7 @@
 import { ColumnDef, passiveEventSupported } from '@tanstack/react-table';
 import { useEffect, useState } from 'react';
-import { generateColumnSizeMap, adjustColumnWidth, generateColumnStartMap } from '../features/columnSize';
-type ColumnSizeMap = Record<string, number>;
-type ColumnStartMap = Record<string, number>;
+import { processInitColumnSzie, ColumnSizeMap, processColumnResize } from '../features/columnSize';
+
 export const useColumnSize = <TData, TValue>({
    columns,
    tableWidth,
@@ -11,23 +10,21 @@ export const useColumnSize = <TData, TValue>({
    tableWidth?: number;
 }) => {
    const [columnSizeMap, setColumnSizeMap] = useState<ColumnSizeMap>();
-   const [columnStartMap, setColumnStartMap] = useState<ColumnStartMap>();
    const passiveIfSupported = passiveEventSupported() ? { passive: false } : false;
    const onColumnResize = (_contextDocument?: Document) => {
       const contextDocument = _contextDocument || typeof document !== 'undefined' ? document : null;
 
-      return (event: React.MouseEvent, columnId: string) => {
+      return (event: React.MouseEvent, accessorKey: string) => {
          if (!contextDocument || !columnSizeMap || !tableWidth) return;
          const startX = event.clientX;
-         const startSize = columnSizeMap[columnId];
+         const startSize = columnSizeMap?.get(accessorKey)?.size || 0;
          const handleMouseMove = (moveEvent: MouseEvent) => {
             const deltaX = moveEvent.clientX - startX;
             const newSize = startSize + deltaX;
-            const updatedSizeMap = adjustColumnWidth({ columnSizeMap, columnId, newSize, tableWidth });
-
-            if (updatedSizeMap) {
-               setColumnSizeMap(updatedSizeMap);
-               setColumnStartMap(generateColumnStartMap(updatedSizeMap));
+            const newSizeMap = processColumnResize({ columnSizeMap, accessorKey, newSize, tableWidth });
+            console.log(newSizeMap);
+            if (newSizeMap) {
+               setColumnSizeMap(newSizeMap);
             }
          };
          const handleMouseUp = () => {
@@ -41,10 +38,8 @@ export const useColumnSize = <TData, TValue>({
    };
    useEffect(() => {
       if (!tableWidth) return;
-      const initialSizeMap = generateColumnSizeMap(columns, tableWidth);
-      setColumnSizeMap(initialSizeMap);
-      setColumnStartMap(generateColumnStartMap(initialSizeMap));
+      setColumnSizeMap(processInitColumnSzie(columns, tableWidth));
    }, [columns, tableWidth]);
 
-   return { columnSizeMap, columnStartMap, onColumnResize };
+   return { columnSizeMap, onColumnResize };
 };

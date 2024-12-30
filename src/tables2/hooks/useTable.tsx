@@ -17,10 +17,10 @@ interface UseTableOptions<TData> extends TableOptions<TData> {
 
 export function useTable<TData>({ data, columns, option }: UseTableOptions<TData>) {
    const [sorting, setSorting] = useState<SortingState>([]);
-   const { columnSizeMap, onColumnResize, columnStartMap } = useColumnSize({
+   const { columnSizeMap, onColumnResize } = useColumnSize({
       columns,
       tableWidth: option?.size?.width,
-   }); // TODO: 타입 수정
+   });
 
    const table = useReactTable({
       data,
@@ -35,5 +35,5 @@ export function useTable<TData>({ data, columns, option }: UseTableOptions<TData
       },
    });
 
-   return { table, columnSizeMap, onColumnResize, columnStartMap };
+   return { table, columnSizeMap, onColumnResize };
 }

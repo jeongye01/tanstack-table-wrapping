@@ -1,10 +1,21 @@
 import { ColumnDef } from '@tanstack/react-table';
+import { pipe } from '../utils/pipe';
+interface ColumnSizeInfo {
+   // TODO: 타입 tanstack-table거 쓰기
+   size: number;
+   startSize?: number;
+   startLeft?: number;
+}
+export type ColumnSizeMap = Map<string, ColumnSizeInfo>;
+function clampColumnSize(size: number, minSize: number = 80): number {
+   return Math.max(size, minSize);
+}
 
-export const generateColumnSizeMap = <TData, TValue>(
+const generateColumnSizeMap = <TData, TValue>(
    columns: ColumnDef<TData, TValue>[],
    tableWidth: number,
-): Record<string, number> => {
-   if (!Array.isArray(columns) || columns.length === 0) return {};
+): ColumnSizeMap => {
+   if (!Array.isArray(columns) || columns.length === 0) return new Map();
 
    const staticWidth = columns.reduce((acc, col) => acc + (col.size || 0), 0);
    const dynamicColumnCnt = columns.filter(col => !col.size).length;
@@ -16,50 +27,83 @@ export const generateColumnSizeMap = <TData, TValue>(
 
    return columns.reduce((acc, col, index) => {
       const isLastDynamicColumn = index === columns.length - 1 || columns.slice(index + 1).every(c => c.size);
-      const size = col.size || (isLastDynamicColumn ? lastColumnWidth : defaultColumnWidth);
+      const size = col.size || clampColumnSize(isLastDynamicColumn ? lastColumnWidth : defaultColumnWidth);
+
       if (col.accessorKey) {
-         acc[col.accessorKey] = Math.max(size, col.minSize || -1); // TODO: maxSize 처리
+         acc.set(col.accessorKey, {
+            size,
+            startSize: size,
+         });
       }
       return acc;
-   }, {} as Record<string, number>);
+   }, new Map<string, ColumnSizeInfo>());
 };
 
-export const adjustColumnWidth = ({
+const adjustColumnWidth = ({
    columnSizeMap,
-   columnId,
+   accessorKey,
    newSize,
    tableWidth,
 }: {
-   columnSizeMap: Record<string, number>;
-   columnId: string;
+   columnSizeMap: ColumnSizeMap;
+   accessorKey: string;
    newSize: number;
    tableWidth: number;
-}): Record<string, number> | undefined => {
-   if (!columnSizeMap || !tableWidth) return undefined;
+}): ColumnSizeMap => {
+   if (!columnSizeMap || !tableWidth) return columnSizeMap;
+   const targetColumn = columnSizeMap.get(accessorKey);
+   if (!targetColumn) return columnSizeMap;
 
-   const otherColumnsWidth = Object.entries(columnSizeMap)
-      .filter(([key]) => key !== columnId)
-      .reduce((sum, [, width]) => sum + width, 0);
+   targetColumn.size = clampColumnSize(newSize, targetColumn.startSize);
 
-   const minAllowedWidth = tableWidth || 0;
-   const remainingWidth = minAllowedWidth - otherColumnsWidth;
+   const newMap = new Map(columnSizeMap);
 
-   const adjustedSize = Math.max(newSize, remainingWidth);
+   newMap.set(accessorKey, targetColumn);
 
-   return {
-      ...columnSizeMap,
-      [columnId]: adjustedSize,
-   };
+   return newMap;
 };
-export const generateColumnStartMap = (sizeMap: Record<string, number>): Record<string, number> => {
-   if (!sizeMap || Object.keys(sizeMap).length === 0) return {};
+const generateColumnStart = (columnSizeMap: ColumnSizeMap): ColumnSizeMap => {
+   if (!columnSizeMap) return columnSizeMap;
+   return Array.from(columnSizeMap.entries()).reduce(
+      (acc, [key, info]) => {
+         const { size } = info;
 
-   return Object.keys(sizeMap).reduce(
-      (acc: { startMap: Record<string, number>; cumulativeWidth: number }, columnId: string) => {
-         acc.startMap[columnId] = acc.cumulativeWidth;
-         acc.cumulativeWidth += sizeMap[columnId];
+         const cumulativeStart = acc.cumulativeStart;
+         acc.updatedMap.set(key, {
+            ...info,
+            startLeft: cumulativeStart,
+         });
+         acc.cumulativeStart += size;
+
          return acc;
       },
-      { startMap: {}, cumulativeWidth: 0 },
-   ).startMap;
+      { updatedMap: new Map<string, ColumnSizeInfo>(), cumulativeStart: 0 },
+   ).updatedMap;
+};
+export const processInitColumnSzie = <TData, TValue>(
+   columns: ColumnDef<TData, TValue>[],
+   tableWidth: number,
+): ColumnSizeMap => {
+   const pipeline = pipe(
+      (columns: ColumnDef<TData, TValue>[]) => generateColumnSizeMap(columns, tableWidth),
+      generateColumnStart,
+   );
+   return pipeline(columns);
+};
+export const processColumnResize = ({
+   columnSizeMap,
+   accessorKey,
+   newSize,
+   tableWidth,
+}: {
+   columnSizeMap: ColumnSizeMap;
+   accessorKey: string;
+   newSize: number;
+   tableWidth: number;
+}): ColumnSizeMap => {
+   const pipeline = pipe(
+      columnSizeMap => adjustColumnWidth({ columnSizeMap, accessorKey, newSize, tableWidth }),
+      generateColumnStart,
+   );
+   return pipeline(columnSizeMap);
 };
