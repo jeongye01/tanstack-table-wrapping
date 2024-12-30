@@ -1,6 +1,7 @@
 import { type ColumnDef } from '@tanstack/react-table';
 
 import { Table } from './Table';
+import { RowIndexColumn } from './Column/RowIndexColumn';
 
 function generateRandomData(count = 500) {
    const firstNames = ['John', 'Jane', 'Alice', 'Bob', 'Charlie', 'Eve', 'Grace', 'Tom', 'Emily', 'David'];
@@ -21,9 +22,8 @@ function generateRandomData(count = 500) {
    const getRandomElement = (array: string[]) => array[Math.floor(Math.random() * array.length)];
    const getRandomNumber = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
 
-   const data = Array.from({ length: count }, (_, index) => {
+   const data = Array.from({ length: count }, () => {
       return {
-         no: index + 1,
          firstName: getRandomElement(firstNames),
          lastName: getRandomElement(lastNames),
          age: getRandomNumber(18, 80),
@@ -67,13 +67,7 @@ const columns: ColumnDef<Person>[] = [
       enableResizing: false,
       enableSorting: false,
    },
-   {
-      accessorKey: 'no',
-      header: 'No',
-
-      enableResizing: true,
-      minSize: 80,
-   },
+   RowIndexColumn,
    {
       accessorKey: 'firstName',
       header: 'First Name',

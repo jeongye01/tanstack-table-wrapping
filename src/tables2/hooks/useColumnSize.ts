@@ -1,6 +1,6 @@
 import { ColumnDef, passiveEventSupported } from '@tanstack/react-table';
 import { useEffect, useState } from 'react';
-import { processInitColumnSzie, ColumnSizeMap, processColumnResize } from '../features/columnSize';
+import { processInitColumnSzie, ColumnSizeMap, processColumnResize, getTableTotalSize } from '../features/columnSize';
 
 export const useColumnSize = <TData, TValue>({
    columns,
@@ -10,6 +10,7 @@ export const useColumnSize = <TData, TValue>({
    tableWidth?: number;
 }) => {
    const [columnSizeMap, setColumnSizeMap] = useState<ColumnSizeMap>();
+   const tableTotalSize = getTableTotalSize(columnSizeMap);
    const passiveIfSupported = passiveEventSupported() ? { passive: false } : false;
    const onColumnResize = (_contextDocument?: Document) => {
       const contextDocument = _contextDocument || typeof document !== 'undefined' ? document : null;
@@ -37,5 +38,5 @@ export const useColumnSize = <TData, TValue>({
       setColumnSizeMap(processInitColumnSzie(columns, tableWidth));
    }, [columns, tableWidth]);
 
-   return { columnSizeMap, onColumnResize };
+   return { columnSizeMap, onColumnResize, tableTotalSize };
 };
