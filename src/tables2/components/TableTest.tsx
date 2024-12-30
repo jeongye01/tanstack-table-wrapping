@@ -136,7 +136,7 @@ export const TableTest = () => {
    console.log(randomData.length);
    return (
       <div style={{ padding: '60px' }}>
-         <Table data={randomData} columns={columns} option={{ size: { height: '500px' } }} />
+         <Table data={randomData} columns={columns} option={{ tableSize: { height: '500px' } }} />
       </div>
    );
 };

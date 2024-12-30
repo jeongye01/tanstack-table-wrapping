@@ -4,22 +4,25 @@ import { SortingButton } from './Header/SortingButton';
 import { useContainerWidth } from '../hooks/useContainerWidth';
 import { useTable } from '../hooks/useTable';
 import { useVirtualizer } from '@tanstack/react-virtual';
+
+interface TableSizeOptions {
+   width?: CSSProperties['width'];
+   height?: CSSProperties['height'];
+   minWidth?: CSSProperties['minWidth'];
+   minHeight?: CSSProperties['minHeight'];
+   maxWidth?: CSSProperties['maxWidth'];
+   maxHeight?: CSSProperties['maxHeight'];
+}
 interface TableProps<TData> extends Pick<TableOptions<TData>, 'data' | 'columns'> {
    option?: {
-      size?: {
-         width?: CSSProperties['width'];
-         height?: CSSProperties['height'];
-         minWidth?: CSSProperties['minWidth'];
-         minHeight?: CSSProperties['minHeight'];
-         maxWidth?: CSSProperties['maxWidth'];
-         maxHeight?: CSSProperties['maxHeight'];
-      };
-      rowHeight?: number; // 행 높이 추가
+      tableSize?: TableSizeOptions;
+      rowHeight?: number;
+      fontSize?: number;
    };
 }
 
 export const Table = <TData,>({ data, columns, option }: TableProps<TData>) => {
-   const { size, rowHeight = 46 } = option || {};
+   const { tableSize, rowHeight = 46, fontSize = 12 } = option || {};
    const containerRef = useRef<HTMLDivElement>(null);
 
    // 테이블 크기 계산 및 초기화
@@ -34,27 +37,34 @@ export const Table = <TData,>({ data, columns, option }: TableProps<TData>) => {
    const virtualizer = useVirtualizer({
       count: rows.length,
       getScrollElement: () => containerRef.current,
-      estimateSize: () => 46,
+      estimateSize: () => rowHeight,
       overscan: 2,
    });
-   console.log(columnSizeMap);
+
    return (
       <div
          ref={containerRef}
          className="dbmaster-table-container dbmaster-table-scrollbar"
-         style={{
-            height: size?.height ?? '100%',
-            minHeight: size?.minHeight,
-            maxHeight: size?.maxHeight,
-            width: size?.width ?? '100%',
-            maxWidth: size?.maxWidth,
-            minWidth: size?.minWidth,
-            overflowY: 'auto',
-            position: 'relative',
-         }}
+         style={
+            {
+               height: tableSize?.height ?? '100%',
+               minHeight: tableSize?.minHeight,
+               maxHeight: tableSize?.maxHeight,
+               width: tableSize?.width ?? '100%',
+               maxWidth: tableSize?.maxWidth,
+               minWidth: tableSize?.minWidth,
+               '--dbmaster-row-height': `${rowHeight}px`,
+               '--dbmaster-font-size': `${fontSize}px`,
+            } as React.CSSProperties
+         }
       >
          {
-            <table className="dbmaster-table" style={{ height: `${virtualizer.getTotalSize()}px` }}>
+            <table
+               className="dbmaster-table"
+               style={{
+                  height: `${virtualizer.getTotalSize()}px`,
+               }}
+            >
                <thead className="dbmaster-thead">
                   {table.getHeaderGroups().map(headerGroup => (
                      <tr key={headerGroup.id} className="dbmaster-tr">

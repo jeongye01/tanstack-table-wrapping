@@ -3,8 +3,6 @@
 .dbmaster-table-container {
    overflow: scroll;
    position: relative;
-   width: var(--dbmaster-table-width, '100%');
-   height: var(--dbmaster-table-height, '100%');
 }
 
 .dbmaster-table-scrollbar::-webkit-scrollbar {
@@ -25,7 +23,7 @@
 .dbmaster-table {
    border-collapse: separate;
    border-spacing: 0;
-   font-size: var(--dbmaster-font-size, 12px);
+   font-size: var(--dbmaster-font-size);
 }
 
 .dbmaster-thead {
@@ -34,11 +32,11 @@
    z-index: 1;
    background-color: #ffffff;
    overflow: hidden;
-   height: var(--dbmaster-header-height, 48px);
+   height: var(--dbmaster-row-height);
 }
 
 .dbmaster-tr {
-   height: 46px;
+   height: var(--dbmaster-row-height);
    display: flex;
    align-items: center;
    position: relative;
