@@ -14,22 +14,23 @@ interface TableSizeOptions {
    maxHeight?: CSSProperties['maxHeight'];
 }
 interface TableProps<TData> extends Pick<TableOptions<TData>, 'data' | 'columns'> {
+   enableRowIndex?: boolean;
    option?: {
+      // size 옵션으로 바꿔야 하나
       tableSize?: TableSizeOptions;
       rowHeight?: number;
       fontSize?: number;
    };
 }
 
-export const Table = <TData,>({ data, columns, option }: TableProps<TData>) => {
+export const Table = <TData,>({ data, columns, option, enableRowIndex }: TableProps<TData>) => {
    const { tableSize, rowHeight = 46, fontSize = 12 } = option || {};
    const containerRef = useRef<HTMLDivElement>(null);
-
-   // 테이블 크기 계산 및 초기화
    const { size: containerSize } = useContainerWidth({ containerRef });
    const { table, columnSizeMap, onColumnResize, tableTotalSize } = useTable<TData>({
       data,
       columns,
+      enableRowIndex,
       option: { size: containerSize },
    });
    const { rows } = table.getRowModel();

@@ -8,21 +8,22 @@ import {
 } from '@tanstack/react-table';
 import { SizeOption } from './useContainerWidth';
 import { useColumnSize } from './useColumnSize';
+import { useExtendColumns } from './useExtendColumns';
 
 interface UseTableOptions<TData> extends TableOptions<TData> {
+   enableRowIndex?: boolean;
    option?: {
       size?: SizeOption;
    };
 }
 
-export function useTable<TData>({ data, columns, option }: UseTableOptions<TData>) {
+export function useTable<TData>({ data, columns: initColumns, enableRowIndex, option }: UseTableOptions<TData>) {
    const [sorting, setSorting] = useState<SortingState>([]);
-   const { columnSizeMap, onColumnResize } = useColumnSize({
+   const { extentedColumns: columns } = useExtendColumns({ columns: initColumns, enableRowIndex });
+   const { columnSizeMap, onColumnResize, tableTotalSize } = useColumnSize({
       columns,
       tableWidth: option?.size?.width,
    });
-
-   const tableTotalSize = Array.from(columnSizeMap?.values() ?? []).reduce((acc, column) => acc + column.size, 0);
 
    const table = useReactTable({
       data,

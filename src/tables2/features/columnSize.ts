@@ -107,3 +107,7 @@ export const processColumnResize = ({
    );
    return pipeline(columnSizeMap);
 };
+
+export const getTableTotalSize = (columnSizeMap?: ColumnSizeMap) => {
+   return Array.from(columnSizeMap?.values() ?? []).reduce((acc, column) => acc + column.size, 0);
+};
