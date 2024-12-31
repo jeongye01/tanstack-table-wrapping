@@ -130,7 +130,12 @@ export const TableTest = () => {
    console.log(randomData.length);
    return (
       <div style={{ padding: '60px' }}>
-         <Table data={[]} columns={columns} option={{ tableSize: { height: '500px' } }} />
+         <Table
+            data={randomData}
+            columns={columns}
+            onLoadMore={() => console.log('hid')}
+            option={{ tableSize: { height: '500px' } }}
+         />
       </div>
    );
 };

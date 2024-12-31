@@ -4,6 +4,7 @@ import { useTable } from '../hooks/useTable';
 import { TableProvider } from '../tableContext';
 import { TableHeader } from './Header/TableHeader';
 import { TableBody } from './Body/TableBody';
+import { TableContainer } from './Container/TableContainer';
 
 interface TableSizeOptions {
    width?: CSSProperties['width'];
@@ -15,6 +16,8 @@ interface TableSizeOptions {
 }
 interface TableProps<TData> extends Pick<TableOptions<TData>, 'data' | 'columns'> {
    enableRowIndex?: boolean;
+   onLoadMore?: () => void;
+   hasMoreData?: boolean;
    option?: {
       // size 옵션으로 바꿔야 하나
       tableSize?: TableSizeOptions;
@@ -23,7 +26,14 @@ interface TableProps<TData> extends Pick<TableOptions<TData>, 'data' | 'columns'
    };
 }
 
-export const Table = <TData,>({ data, columns, option, enableRowIndex }: TableProps<TData>) => {
+export const Table = <TData,>({
+   data,
+   columns,
+   option,
+   enableRowIndex,
+   onLoadMore,
+   hasMoreData,
+}: TableProps<TData>) => {
    const { tableSize, rowHeight = 46, fontSize = 12 } = option || {};
    const containerRef = useRef<HTMLDivElement>(null);
    const table = useTable<TData>({
@@ -32,6 +42,8 @@ export const Table = <TData,>({ data, columns, option, enableRowIndex }: TablePr
       rowHeight,
       enableRowIndex,
       containerRef,
+      onLoadMore,
+      hasMoreData,
    });
    return (
       <TableProvider
@@ -39,9 +51,8 @@ export const Table = <TData,>({ data, columns, option, enableRowIndex }: TablePr
             ...table,
          }}
       >
-         <div
-            ref={containerRef}
-            className="dbmaster-table-container dbmaster-table-scrollbar"
+         <TableContainer
+            containerRef={containerRef}
             style={
                {
                   height: tableSize?.height ?? '100%',
@@ -65,7 +76,7 @@ export const Table = <TData,>({ data, columns, option, enableRowIndex }: TablePr
                <TableHeader />
                <TableBody />
             </table>
-         </div>
+         </TableContainer>
       </TableProvider>
    );
 };
