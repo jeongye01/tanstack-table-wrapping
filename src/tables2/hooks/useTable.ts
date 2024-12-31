@@ -10,11 +10,14 @@ import { useContainerWidth } from './useContainerWidth';
 import { useColumnSize } from './useColumnSize';
 import { useExtendColumns } from './useExtendColumns';
 import { useDisplayRows } from './useDisplayRows';
+import { useInfiniteScroll } from './useInfiniteScroll';
 
 interface UseTableOptions<TData> extends TableOptions<TData> {
    enableRowIndex?: boolean;
    rowHeight: number;
    containerRef: React.RefObject<HTMLDivElement>;
+   onLoadMore?: () => void;
+   hasMoreData?: boolean;
 }
 
 export function useTable<TData>({
@@ -23,6 +26,8 @@ export function useTable<TData>({
    enableRowIndex,
    rowHeight,
    containerRef,
+   onLoadMore,
+   hasMoreData,
 }: UseTableOptions<TData>) {
    const [sorting, setSorting] = useState<SortingState>([]);
    const { size: containerSize } = useContainerWidth({ containerRef });
@@ -49,5 +54,19 @@ export function useTable<TData>({
       containerRef,
       rowHeight,
    });
-   return { table, columnSizeMap, onColumnResize, tableTotalWidth, tableTotalHeight, displayRows, isEmptyState };
+   const { bottomRef } = useInfiniteScroll({
+      containerRef,
+      onLoadMore,
+      hasMoreData,
+   });
+   return {
+      table,
+      columnSizeMap,
+      onColumnResize,
+      tableTotalWidth,
+      tableTotalHeight,
+      displayRows,
+      isEmptyState,
+      bottomRef,
+   };
 }

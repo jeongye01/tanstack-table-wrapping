@@ -8,6 +8,7 @@ interface TableContextType {
    tableTotalHeight: number; // 테이블 총 높이
    displayRows: any[]; // 가상화된 행 데이터
    isEmptyState: boolean;
+   bottomRef: React.RefObject<HTMLDivElement>;
 }
 
 const TableContext = createContext<TableContextType | null>(null);
