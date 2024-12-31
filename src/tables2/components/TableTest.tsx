@@ -17,7 +17,7 @@ function generateRandomData(count = 500) {
       'Martinez',
       'Hernandez',
    ];
-   const statuses = ['Single', 'Married', 'Divorced', 'Complicated'];
+   const statuses = ['Single', 'Married', 'Divorced', null];
 
    const getRandomElement = (array: string[]) => array[Math.floor(Math.random() * array.length)];
    const getRandomNumber = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -37,7 +37,7 @@ function generateRandomData(count = 500) {
 }
 
 // Example usage
-const randomData = generateRandomData(150000);
+const randomData = generateRandomData(50);
 
 type Person = {
    firstName: string;
@@ -130,7 +130,7 @@ export const TableTest = () => {
    console.log(randomData.length);
    return (
       <div style={{ padding: '60px' }}>
-         <Table data={randomData} columns={columns} option={{ tableSize: { height: '500px' } }} />
+         <Table data={[]} columns={columns} option={{ tableSize: { height: '500px' } }} />
       </div>
    );
 };

@@ -33,7 +33,6 @@
    overflow: hidden;
    height: var(--dbmaster-row-height);
 }
-
 .dbmaster-tr {
    height: var(--dbmaster-row-height);
    display: flex;
@@ -118,4 +117,18 @@
    *:hover > .dbmaster-column-resizer-bar {
       opacity: 1;
    }
+}
+
+.dbmaster-emptyrow-layout {
+   position: sticky;
+   top: 50%;
+   left: 50%;
+   background-color: green;
+   width: fit-content;
+   height: 100%;
+   color: white;
+   transform: translateX(-50%);
+   text-align: left;
+
+   z-index: 1;
 }

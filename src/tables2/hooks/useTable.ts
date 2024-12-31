@@ -6,25 +6,31 @@ import {
    type TableOptions,
    type SortingState,
 } from '@tanstack/react-table';
-import { SizeOption } from './useContainerWidth';
+import { useContainerWidth } from './useContainerWidth';
 import { useColumnSize } from './useColumnSize';
 import { useExtendColumns } from './useExtendColumns';
+import { useDisplayRows } from './useDisplayRows';
 
 interface UseTableOptions<TData> extends TableOptions<TData> {
    enableRowIndex?: boolean;
-   option?: {
-      size?: SizeOption;
-   };
+   rowHeight: number;
+   containerRef: React.RefObject<HTMLDivElement>;
 }
 
-export function useTable<TData>({ data, columns: initColumns, enableRowIndex, option }: UseTableOptions<TData>) {
+export function useTable<TData>({
+   data,
+   columns: initColumns,
+   enableRowIndex,
+   rowHeight,
+   containerRef,
+}: UseTableOptions<TData>) {
    const [sorting, setSorting] = useState<SortingState>([]);
+   const { size: containerSize } = useContainerWidth({ containerRef });
    const { extentedColumns: columns } = useExtendColumns({ columns: initColumns, enableRowIndex });
-   const { columnSizeMap, onColumnResize, tableTotalSize } = useColumnSize({
+   const { columnSizeMap, onColumnResize, tableTotalWidth } = useColumnSize({
       columns,
-      tableWidth: option?.size?.width,
+      tableWidth: containerSize?.width,
    });
-
    const table = useReactTable({
       data,
       columns,
@@ -38,5 +44,10 @@ export function useTable<TData>({ data, columns: initColumns, enableRowIndex, op
       },
    });
 
-   return { table, columnSizeMap, onColumnResize, tableTotalSize };
+   const { displayRows, tableTotalHeight, isEmptyState } = useDisplayRows({
+      rows: table.getRowModel().rows,
+      containerRef,
+      rowHeight,
+   });
+   return { table, columnSizeMap, onColumnResize, tableTotalWidth, tableTotalHeight, displayRows, isEmptyState };
 }
