@@ -10,7 +10,7 @@ export const useColumnSize = <TData, TValue>({
    tableWidth?: number;
 }) => {
    const [columnSizeMap, setColumnSizeMap] = useState<ColumnSizeMap>();
-   const tableTotalSize = getTableTotalSize(columnSizeMap);
+   const tableTotalWidth = getTableTotalSize(columnSizeMap);
    const passiveIfSupported = passiveEventSupported() ? { passive: false } : false;
    const onColumnResize = (_contextDocument?: Document) => {
       const contextDocument = _contextDocument || typeof document !== 'undefined' ? document : null;
@@ -38,5 +38,5 @@ export const useColumnSize = <TData, TValue>({
       setColumnSizeMap(processInitColumnSzie(columns, tableWidth));
    }, [columns, tableWidth]);
 
-   return { columnSizeMap, onColumnResize, tableTotalSize };
+   return { columnSizeMap, onColumnResize, tableTotalWidth };
 };
