@@ -1,5 +1,6 @@
 import React, { createContext, useContext } from 'react';
 
+// TODO: table layout 관련 context 쪼개기
 interface TableContextType {
    table: any; // tanstack Table 객체
    columnSizeMap: Map<string, any>; // 컬럼 크기 정보
@@ -9,6 +10,8 @@ interface TableContextType {
    displayRows: any[]; // 가상화된 행 데이터
    isEmptyState: boolean;
    bottomRef: React.RefObject<HTMLDivElement>;
+   containerRef: React.RefObject<HTMLDivElement>;
+   containerStyle: React.CSSProperties;
 }
 
 const TableContext = createContext<TableContextType | null>(null);

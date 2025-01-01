@@ -2,6 +2,8 @@ import { type ColumnDef } from '@tanstack/react-table';
 
 import { Table } from './Table';
 import { RowIndexColumn } from './Column/RowIndexColumn';
+import { TableContainer } from './Container/TableContainer';
+import { SearchTest } from './SearchTest';
 
 function generateRandomData(count = 500) {
    const firstNames = ['John', 'Jane', 'Alice', 'Bob', 'Charlie', 'Eve', 'Grace', 'Tom', 'Emily', 'David'];
@@ -108,34 +110,15 @@ const columns: ColumnDef<Person>[] = [
       size: 500,
       minSize: 80,
    },
-   // columnHelper.accessor(row => row.lastName, {
-   //   id: 'lastName',
-   //   header: () => <span>Last Name</span>,
-   // }),
-   // columnHelper.accessor('age', {
-   //   header: () => 'Age',
-   //   cell: info => info.renderValue(),
-   // }),
-   // columnHelper.accessor('visits', {
-   //   header: () => <span>Visits</span>,
-   // }),
-   // columnHelper.accessor('status', {
-   //   header: 'Status',
-   // }),
-   // columnHelper.accessor('progress', {
-   //   header: 'Profile Progress',
-   // }),
 ];
 export const TableTest = () => {
    console.log(randomData.length);
    return (
       <div style={{ padding: '60px' }}>
-         <Table
-            data={randomData}
-            columns={columns}
-            onLoadMore={() => console.log('hid')}
-            option={{ tableSize: { height: '500px' } }}
-         />
+         <Table<Person> data={randomData} columns={columns} option={{ tableSize: { height: '500px' } }}>
+            <SearchTest />
+            <TableContainer />
+         </Table>
       </div>
    );
 };
