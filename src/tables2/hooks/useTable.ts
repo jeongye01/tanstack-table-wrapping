@@ -47,7 +47,7 @@ export function useTable<TData>({
       },
       onColumnFiltersChange: setColumnFilters,
    });
-
+   console.log(columnFilters);
    const { displayRows, tableTotalHeight, isEmptyState } = useDisplayRows({
       // TODO: rows 적을때 동작안하게 하기
       rows: table.getRowModel().rows,
