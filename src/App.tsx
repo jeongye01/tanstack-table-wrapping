@@ -1,7 +1,7 @@
-import { TableTest } from './tables2';
+import { TableTest } from "./tables";
 
 function App() {
-   return <TableTest />;
+  return <TableTest />;
 }
 
 export default App;
