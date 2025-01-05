@@ -6,6 +6,11 @@ interface TableSizeOptions {
    maxWidth?: CSSProperties['maxWidth'];
    maxHeight?: CSSProperties['maxHeight'];
 }
+export interface CustomRowOptions<TData> {
+   rowClassName?: (params: { rowId: RowId; rowData: TData }) => string;
+   rowStyle?: (params: { rowId: RowId; rowData: TData }) => React.CSSProperties;
+   rowEvent?: (params: { rowId: RowId; rowData: TData }) => React.HTMLAttributes<HTMLTableRowElement>;
+}
 
 export interface TableStyleOption {
    tableSize?: TableSizeOptions;
@@ -18,4 +23,5 @@ export interface TableProps<TData> extends Pick<TableOptions<TData>, 'data' | 'c
    onLoadMore?: () => void;
    hasMoreData?: boolean;
    styleOption?: TableStyleOption;
+   customRowOptions?: CustomRowOptions<TData>;
 }

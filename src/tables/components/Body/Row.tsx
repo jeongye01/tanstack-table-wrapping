@@ -1,15 +1,21 @@
 import { flexRender } from '@tanstack/react-table';
 import { useTableContext } from '../../tableContext';
+import clsx from 'clsx';
 
 export const Row = ({ virtualRow, index, row }) => {
-   const { columnSizeMap } = useTableContext();
+   const { columnSizeMap, customRowOptions } = useTableContext();
+   const rowClassName = customRowOptions?.rowClassName?.({ rowId: row.id, rowData: row.original }) || '';
+   const rowStyle = customRowOptions?.rowStyle?.({ rowId: row.id, rowData: row.original }) || {};
+   const rowEvents = customRowOptions?.rowEvent?.({ rowId: row.id, rowData: row.original }) || {};
    return (
       <tr
          key={row.id}
-         className="dbmaster-tr"
+         className={clsx('dbmaster-tr', rowClassName)}
          style={{
+            ...rowStyle,
             transform: `translateY(${virtualRow.start - index * virtualRow.size}px)`,
          }}
+         {...rowEvents}
       >
          {columnSizeMap &&
             row.getVisibleCells().map(cell => (

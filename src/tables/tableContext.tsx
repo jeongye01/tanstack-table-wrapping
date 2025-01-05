@@ -1,7 +1,8 @@
 import React, { createContext, useContext } from 'react';
+import { CustomRowOptions } from './type';
 
 // TODO: table layout 관련 context 쪼개기
-interface TableContextType {
+interface TableContextType<TData> {
    table: any; // tanstack Table 객체
    columnSizeMap: Map<string, any>; // 컬럼 크기 정보
    onColumnResize: (event: React.MouseEvent, columnId: string) => void; // 컬럼 리사이즈 핸들러
@@ -17,6 +18,7 @@ interface TableContextType {
    setColumnFilter: any;
    globalFilter: any;
    setGlobalFilter: any;
+   customRowOptions: CustomRowOptions<TData>;
 }
 
 const TableContext = createContext<TableContextType | null>(null);

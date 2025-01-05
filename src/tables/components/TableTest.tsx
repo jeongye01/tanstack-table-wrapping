@@ -118,6 +118,7 @@ export const TableTest = () => {
          <Table<Person>
             data={randomData}
             columns={columns}
+            customRowOptions={{}}
             styleOption={{ tableSize: { height: '500px' }, bodyStyle: 'zebra' }}
          >
             <SearchTest />

@@ -38,19 +38,19 @@
    display: flex;
    align-items: center;
    position: relative;
+   color: var(--Adaptive-Grey-Grey800, #3c4043);
 }
 
 .zebra tbody .dbmaster-tr:nth-child(even) {
    background: #f9f9f9;
 }
 
-.zebra tbody .dbmaster-tr:nth-child(odd) {
+.zebra tbody.dbmaster-tr:nth-child(odd) {
    background: #ffffff;
 }
 
 .dbmaster-td {
    font-weight: 500;
-   color: var(--Adaptive-Grey-Grey800, #3c4043);
 }
 .dbmaster-th,
 .dbmaster-td {
