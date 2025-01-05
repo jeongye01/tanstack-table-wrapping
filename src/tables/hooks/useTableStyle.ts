@@ -1,12 +1,14 @@
-import { ContainerStyle } from '../type';
+import clsx from 'clsx';
+import { TableStyleOption } from '../type';
 
-export const useContainerStyle = (option?: ContainerStyle) => {
+export const useTableStyle = (styleOption?: TableStyleOption) => {
    const {
       tableSize,
       rowHeight = 46, // FIXME:
       fontSize = 12,
-   } = option || {};
-   const containerStyle = {
+      bodyStyle = 'default',
+   } = styleOption || {};
+   const tableStyle = {
       height: tableSize?.height ?? '100%',
       minHeight: tableSize?.minHeight,
       maxHeight: tableSize?.maxHeight,
@@ -16,5 +18,6 @@ export const useContainerStyle = (option?: ContainerStyle) => {
       '--dbmaster-row-height': `${rowHeight}px`,
       '--dbmaster-font-size': `${fontSize}px`,
    } as React.CSSProperties;
-   return { containerStyle };
+   const tableClassName = clsx(bodyStyle);
+   return { tableStyle, tableClassName };
 };

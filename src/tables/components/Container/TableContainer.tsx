@@ -1,11 +1,16 @@
 import { useTableContext } from '../../tableContext';
 import { TableHeader } from '../Header/TableHeader';
 import { TableBody } from '../Body/TableBody';
+import clsx from 'clsx';
 
 export const TableContainer = () => {
-   const { bottomRef, containerRef, containerStyle, tableTotalHeight, tableTotalWidth } = useTableContext();
+   const { bottomRef, containerRef, tableStyle, tableClassName, tableTotalHeight, tableTotalWidth } = useTableContext();
    return (
-      <div ref={containerRef} className="dbmaster-table-container dbmaster-table-scrollbar" style={containerStyle}>
+      <div
+         ref={containerRef}
+         className={clsx(tableClassName, 'dbmaster-table-container dbmaster-table-scrollbar')}
+         style={tableStyle}
+      >
          <table
             className="dbmaster-table"
             style={{
