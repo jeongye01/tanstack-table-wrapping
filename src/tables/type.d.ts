@@ -7,15 +7,15 @@ interface TableSizeOptions {
    maxHeight?: CSSProperties['maxHeight'];
 }
 
-export interface ContainerStyle {
-   // size 옵션으로 바꿔야 하나
+export interface TableStyleOption {
    tableSize?: TableSizeOptions;
    rowHeight?: number;
    fontSize?: number;
+   bodyStyle?: 'default' | 'zebra';
 }
 export interface TableProps<TData> extends Pick<TableOptions<TData>, 'data' | 'columns'> {
    enableRowIndex?: boolean;
    onLoadMore?: () => void;
    hasMoreData?: boolean;
-   option?: ContainerStyle;
+   styleOption?: TableStyleOption;
 }

@@ -39,11 +39,12 @@
    align-items: center;
    position: relative;
 }
-.dbmaster-tr:nth-child(even) {
+
+.zebra tbody .dbmaster-tr:nth-child(even) {
    background: #f9f9f9;
 }
 
-.dbmaster-tr:nth-child(odd) {
+.zebra tbody .dbmaster-tr:nth-child(odd) {
    background: #ffffff;
 }
 
